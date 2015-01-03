@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vosca</string>
+    <string name="action_settings">Instellingen</string>
+    <string name="hello_world">Hallo wereld!</string>
+    <string name="pd_enummer">E521</string>
+    <string name="title_activity_product_detail">Productdetails</string>
+    <string name="SASupportTV">Tik om te Scannen</string>
+    <string name="productdetailname">Product</string>
+</resources>
