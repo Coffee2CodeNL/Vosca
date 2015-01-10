@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 
 public class ScannerActivity extends ActionBarActivity {
@@ -50,10 +49,14 @@ public class ScannerActivity extends ActionBarActivity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanResult != null) {
-            Intent intent2 = new Intent(this, ProductDetailActivity.class);
-            intent2.putExtra(EXTRA_MESSAGE, scanResult.getContents());
-            startActivity(intent2);
+        try {
+            if (scanResult != null) {
+                Intent intent2 = new Intent(this, ProductDetailActivity.class);
+                intent2.putExtra(EXTRA_MESSAGE, scanResult.getContents());
+                startActivity(intent2);
+            }
+        } catch (Exception ex) {
+            Log.e("Scanner", ex.getMessage());
         }
     }
 }

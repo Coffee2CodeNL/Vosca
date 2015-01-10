@@ -7,20 +7,38 @@
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 tools:context="nl.deadpixel.vosca.scanner.ProductDetailActivity"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:weightSum="1">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/productdetailname"
+        android:id="@+id/tvProductName"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="25dip"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/productdetailname"
-        android:id="@+id/tvProductName"/>
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/storeslabel"
+        android:id="@+id/tvStoresLabel"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/tvStores"
+        android:layout_marginBottom="15dip"/>
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/lvIngredients"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dip"
-        android:background="@color/primary_dark_material_dark" />
+        android:background="@color/primary_dark_material_dark"
+        android:headerDividersEnabled="false"
+        />
 </LinearLayout>

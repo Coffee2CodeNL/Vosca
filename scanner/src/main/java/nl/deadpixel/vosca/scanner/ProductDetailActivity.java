@@ -7,17 +7,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.ArrayList;
 
 
 public class ProductDetailActivity extends ActionBarActivity {
@@ -30,8 +31,8 @@ public class ProductDetailActivity extends ActionBarActivity {
         Intent intent = getIntent();
         String barcode = intent.getStringExtra(ScannerActivity.EXTRA_MESSAGE);
         String url = "http://api1.nl/vosca/getdetails.php?bc=" + barcode;
+        lv = (ListView) findViewById(R.id.lvIngredients);
         new GetProductData().execute(url);
-        Log.e("Scanner", barcode);
     }
 
 
@@ -70,7 +71,7 @@ public class ProductDetailActivity extends ActionBarActivity {
 
                     BufferedReader buffer = new BufferedReader(
                             new InputStreamReader(content));
-                    String s = "";
+                    String s;
                     while ((s = buffer.readLine()) != null) {
                         response += s;
                     }
@@ -85,16 +86,50 @@ public class ProductDetailActivity extends ActionBarActivity {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
+            ArrayList<String> items = new ArrayList<String>();
             String ProductName = null;
+            StringBuilder sb = new StringBuilder();
+            JSONArray stores;
+            JSONArray ingredients;
             try {
-                JSONObject jObject = new JSONObject(result);
-                ProductName = jObject.getString("productsname");
-            } catch (JSONException e) {
-                e.printStackTrace();
+                JSONObject json = (JSONObject) new JSONTokener(result).nextValue();
+                ProductName = (String) json.get("name");
+                stores = json.getJSONArray("stores");
+                ingredients = json.getJSONArray("ingredients");
+                int storecount = stores.length();
+                for (int i = 0; i < storecount; i++) {
+                    try {
+                        JSONObject jo = stores.getJSONObject(i);
+                        String sname = (String) jo.get("name");
+                        sb.append(sname);
+                        sb.append(", ");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                int ingredientcount = ingredients.length();
+                for (int i = 0; i < ingredientcount; i++) {
+                    try {
+                        JSONObject jo = ingredients.getJSONObject(i);
+                        String iname = (String) jo.get("name");
+                        items.add(iname);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("Scanner_ex", e.toString());
             }
-            TextView tv = (TextView) findViewById(R.id.tvProductName);
-            tv.setText(ProductName);
-            Log.e("Scanner", result);
+
+            TextView tv_pn = (TextView) findViewById(R.id.tvProductName);
+            tv_pn.setText(ProductName);
+
+            TextView tv_fsa = (TextView) findViewById(R.id.tvStores);
+            tv_fsa.setText(sb.substring(0, sb.length() - 2));
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1, items);
+            lv.setAdapter(adapter);
+            //Log.e("Scanner", result);
         }
     }
 }
